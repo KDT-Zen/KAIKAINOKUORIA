@@ -13,7 +13,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32);
 
 
-
+	SetWaitVSyncFlag(TRUE);
 
 
 	// DXƒ‰ƒCƒuƒ‰ƒŠ‚Ì‰Šú‰»
