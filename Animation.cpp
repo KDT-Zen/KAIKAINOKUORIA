@@ -98,7 +98,7 @@ void Animation::Update() {
 
 }
 
-void Animation::Draw(int x, int y) {
+void Animation::Draw(int x, int y,int alpha) {
 
 	int w, h;
 	GetGraphSize(frames[current], &w, &h);
@@ -109,6 +109,10 @@ void Animation::Draw(int x, int y) {
 	int dh = (int)(h * scale);
 
 
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+
 	DrawExtendGraph(x, y, x + dw, y + dh, frames[current], TRUE);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 }

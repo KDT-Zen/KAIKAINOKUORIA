@@ -37,6 +37,25 @@ public:
 
 	int titleLogo;
 
+	int titleLogo2;
+
+	int keinai;
+
+	int titlenoize;
+
+	int title_hund1;
+
+	int title_hund2;
+
+	int cloud_1;
+
+	int cloud_2;
+
+	int kusa_1;
+
+	int kusa_2;
+
+
 	int titleBGM;
 
 	int NewGame;
@@ -47,7 +66,9 @@ public:
 
 	int TestPlay;
 
-	int PressAnyButton;
+	int PressEnterKey;
+
+	bool title_flag = false;
 
 	int noiseY = 0;          // ノイズの描画Y位置
 	int noiseMoveCounter = 0; // ノイズ移動用のカウンタ
@@ -73,15 +94,27 @@ private:
 	float menualpha = 0.0f;
 
 
+	//　タイトル項目透明度変数
+	float title_Effect_Alpha = 0.0f;
+
+	// ロゴ透明度変数
+	float logo_Enter_Alpha = 0.0f;
+
 	//　キー入力待ち画像透明度変数
 	float pressAlpha = 0.0f;
 
+	// ロゴフェード開始フラグ
+	bool startLogofade = false;
 
 	TitlePhase titlephase;
 
 	Animation hibana;
 
 	Animation noize;
+
+	Animation movenoize;
+
+	Animation title_effect;
 
 	FadeManager fader;
 

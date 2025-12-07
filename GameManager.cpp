@@ -24,10 +24,60 @@ void GameManager::UpdateTitle() {
 
 	switch (currentTitlePhase) {
 
+		//背景のフェードインが終わった直後の処理
 	case TitlePhase::PressAny:
+
+		if (!startLogofade) {
+
+			startLogofade = true;
+			logo_Enter_Alpha = 0.0f;
+		
+		}
+
+		//ロゴとPressAnyのフェードイン
+		if (startLogofade) {
+			logo_Enter_Alpha += 0.5f;
+		
+
+			if (logo_Enter_Alpha >= 255.0f) {
+				logo_Enter_Alpha = 255.0f;
+				title_Effect_Alpha += 3.0;
+			}
+
+
+			if (title_Effect_Alpha >= 255.0f) {
+				title_Effect_Alpha = 255.0;
+			}
+	
+		}
+
+
+		//キー入力で次に進む
+		if(InputManager::GetInstance().IsTrigger(KEY_INPUT_RETURN)){
+			currentTitlePhase = TitlePhase::PressFadeOut;
+	/*		startLogofade = false;*/
+		}
+
+
+
 		break;
 
 	case TitlePhase::PressFadeOut:
+
+		//　ロゴとPressAnyのフェードアウト
+		logo_Enter_Alpha -= 5;
+
+
+		// 透明度の下限チェック
+		if (logo_Enter_Alpha <= 0) logo_Enter_Alpha = 0;
+	
+
+		// 完全に消えたら次のフェーズへ
+		if (logo_Enter_Alpha == 0) {
+			currentTitlePhase = TitlePhase::MenuFadein;
+		}
+
+
 		break;
 
 	case TitlePhase::MenuFadein:
@@ -67,15 +117,88 @@ void GameManager::DrawTitle()
 {
 	DrawExtendGraph(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, titleBG, TRUE);
 
-	DrawGraph(200, 100, titleLogo, TRUE);
 
-	hibana.Draw(0, 300);
-
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA,(int)logo_Enter_Alpha);
 
 
-	noize.Draw(0, noiseY);
+
+	DrawGraph(700, 40, cloud_2, TRUE);
 
 
+
+	DrawGraph(390, -50, keinai, TRUE);
+
+	DrawGraph(390, 150, cloud_1, TRUE);
+
+
+
+	DrawGraph(340, 300, title_hund1, TRUE);
+
+	DrawGraph(790, 20, title_hund2, TRUE);
+
+
+	DrawGraph(340, 450, kusa_1, TRUE);
+
+	DrawGraph(820, 300, kusa_2, TRUE);
+
+	
+		DrawGraph(445, 10, titleLogo, TRUE);
+	
+
+	if (title_flag) {
+		DrawGraph(445, 10, titleLogo2, TRUE);
+
+	}
+	
+
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
+
+
+
+
+
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)logo_Enter_Alpha);
+
+
+	title_effect.Draw(510, 420, title_Effect_Alpha);
+
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
+
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)logo_Enter_Alpha);
+
+
+	DrawGraph(510, 460, PressEnterKey, TRUE);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
+
+
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 70); // 透明度50%
+
+	DrawBox(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, GetColor(0, 0, 0), TRUE);
+
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
+
+
+
+	movenoize.Draw(0, 0,20);
+
+
+	hibana.Draw(0, 300,255);
+
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 90); // 透明度50%
+
+
+
+	noize.Draw(0, noiseY,255);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
 
 }
 
@@ -104,8 +227,30 @@ void GameManager::GameInit() {
 
 	noize.Init("titlenoize", 88, 2, 2, "delay-0.033333333333333s", 6.0f);
 
+	movenoize.Init("movenoize", 89, 9, 2, "delay-0.033333333333333s", 6.0f);
+
+	title_effect.Init("title_effect", 89, 5, 2, "delay-0.041666666666667s", 1.1f);
+
 	// タイトルロゴ画像の読み込み
-	titleLogo = LoadGraph("data/logo.png");
+	titleLogo = LoadGraph("TitleLogo/titlelogo.png");
+
+	titleLogo2 = LoadGraph("TitleLogo/titlelogo2.png");
+
+	keinai = LoadGraph("TitleLogo/keinai.png");
+
+	kusa_1 = LoadGraph("TitleLogo/kusa_1.png");
+
+	kusa_2 = LoadGraph("TitleLogo/kusa_2.png");
+
+	title_hund1 = LoadGraph("TitleLogo/title_hund1.png");
+
+	title_hund2 = LoadGraph("TitleLogo/title_hund2.png");
+
+	cloud_1 = LoadGraph("TitleLogo/cloud_1.png");
+
+	cloud_2 = LoadGraph("TitleLogo/cloud_2.png");
+
+	/*titlenoize = LoadGraph("data/titlenoize.png");*/
 
 	// タイトルBGMの読み込みと再生
 	titleBGM = LoadSoundMem("data/titlebgm.wav");
@@ -115,7 +260,7 @@ void GameManager::GameInit() {
 
 	// タイトルメニュー画像の読み込み
 
-	PressAnyButton = LoadGraph("data/pressanybutton.png");
+	PressEnterKey = LoadGraph("data/pressenterkey.png");
 
 	NewGame = LoadGraph("data/newgame.png");
 
@@ -158,6 +303,12 @@ void GameManager::GameUpdate() {
 	// ノイズアニメーションの更新
 	noize.Update();
 
+
+	movenoize.Update();
+
+	//項目選択アニメーションの更新
+	title_effect.Update();
+
 	// 入力の更新
 	InputManager::GetInstance().Update();
 
@@ -169,6 +320,8 @@ void GameManager::GameUpdate() {
 	case SceneType::TITLE:
 		// ノイズ待ち時間を減らす
 		noiseTimer--;
+
+		title_flag = false;
 
 		// 0以下になったら動く
 		if (noiseTimer <= 0)
@@ -183,6 +336,9 @@ void GameManager::GameUpdate() {
 			//  画面の下まで行ったら上にワープさせる
 			if (noiseY > WINDOW_HEIGHT)
 			{
+				title_flag = true;
+
+
 				noiseY = -200;  // ノイズが自然に上から降ってくるように見える
 			}
 		}
@@ -247,6 +403,27 @@ void GameManager::GameEnd() {
 	DeleteGraph(titleBG);
 
 	DeleteGraph(titleLogo);
+
+	DeleteGraph(titlenoize);
+
+	DeleteGraph(PressEnterKey);
+
+	DeleteGraph(keinai);
+
+	DeleteGraph(kusa_1);
+
+	DeleteGraph(kusa_2);
+
+	DeleteGraph(title_hund1);
+
+	DeleteGraph(title_hund2);
+
+	DeleteGraph(cloud_1);
+
+	DeleteGraph(cloud_2);
+
+	DeleteGraph(titleLogo2);
+	StopSoundMem(titleBGM);
 
 
 };

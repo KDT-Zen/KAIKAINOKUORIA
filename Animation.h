@@ -22,7 +22,7 @@ public:
 
 	void Update();
 
-	void Draw(int x, int y);
+	void Draw(int x, int y,int alpha);
 
 	int GetFrame(int index) const { return frames[index]; }
 
@@ -38,6 +38,8 @@ private:
 	int counter;     // 待機時間用カウンター
 
 	float scale;
+
+	
 
 
 	int digit;                      // ★ 桁数（2桁 or 3桁）
