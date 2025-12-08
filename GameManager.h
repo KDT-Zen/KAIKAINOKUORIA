@@ -33,47 +33,77 @@ public:
 
 	int fadeDir = 0;
 
+	//　タイトル背景
 	int titleBG;
 
+	//　タイトルロゴ
 	int titleLogo;
 
+	//　タイトルロゴ（歪）
 	int titleLogo2;
 
+	//　タイトルロゴ境内）
 	int keinai;
 
+	//　タイトル（ノイズ演出）
 	int titlenoize;
 
+	//　タイトルロゴ（手）
 	int title_hund1;
 
+	//　タイトルロゴ（手右上）
 	int title_hund2;
 
+	//　タイトルロゴ（左下）
 	int cloud_1;
 
+	//　タイトルロゴ（右上）
 	int cloud_2;
 
+	//　タイトルロゴ（草）
 	int kusa_1;
 
+	//　タイトルロゴ（右上草）
 	int kusa_2;
 
-
+	//　タイトルBGM
 	int titleBGM;
 
+	//　タイトル項目
 	int NewGame;
 
+	//タイトル項目
 	int Option;
 
+	//　タイトル項目
 	int Exit;
 
+	//　タイトル項目
 	int TestPlay;
 
+	//　タイトル項目
 	int PressEnterKey;
 
+
+	//　タイトルロゴランダム歪用のFlag
+
+	//　歪んでいないタイトルロゴの表示を切り替えるFlag
 	bool title_flag = false;
+
+	//　歪んでるタイトルロゴの表示を切り替えるFlag
+	bool title_flag2 = false;
+
+	//　歪を管理する変数
+	float distortTimer = 0.0f;
+
+	float distortInterval = 0.0f;
 
 	int noiseY = 0;          // ノイズの描画Y位置
 	int noiseMoveCounter = 0; // ノイズ移動用のカウンタ
 
 	int noiseTimer = 0;
+
+	
 
 
 	void GameInit();
@@ -86,9 +116,18 @@ public:
 
 	void ChangeScene(SceneType next);
 
-
+	void UpdateLogoDistortion();
 
 private:
+
+	//　PressEnterKey 用の点滅アルファ値
+	float pressBlinkAlpha = 0.0f;
+
+	//　今明るくなっている最中かどうか（true =　フェードイン中/　false　= フェードアウト）
+	bool pressBlinkIncreasing = true;
+
+	//　点滅の速さ（数値をあげると点滅が早くなる）
+	float pressBlinkSpeed = 3.0f;
 
 	// メニュー透明度画像変数
 	float menualpha = 0.0f;
@@ -106,7 +145,10 @@ private:
 	// ロゴフェード開始フラグ
 	bool startLogofade = false;
 
+	//　タイトル
 	TitlePhase titlephase;
+
+	//　アニメーション
 
 	Animation hibana;
 

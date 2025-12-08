@@ -27,28 +27,72 @@ void GameManager::UpdateTitle() {
 		//背景のフェードインが終わった直後の処理
 	case TitlePhase::PressAny:
 
+		//　まだフェードが開始していない初回だけ初期化する
 		if (!startLogofade) {
 
+			//　フェード処理開始フラグを立てる
 			startLogofade = true;
+
+			//　それぞれのアルファ値の設定
 			logo_Enter_Alpha = 0.0f;
+			pressBlinkAlpha = 0.0f;
+
 		
 		}
 
 		//ロゴとPressAnyのフェードイン
 		if (startLogofade) {
-			logo_Enter_Alpha += 0.5f;
-		
 
-			if (logo_Enter_Alpha >= 255.0f) {
-				logo_Enter_Alpha = 255.0f;
-				title_Effect_Alpha += 3.0;
+			logo_Enter_Alpha += 2.0f;
+
+			pressBlinkAlpha += 2.0f;
+
+			if (title_Effect_Alpha < 255.0f) {
+
+				if (logo_Enter_Alpha >= 255.0f) {
+					logo_Enter_Alpha = 255.0f;
+					title_Effect_Alpha += 4.0;
+					pressBlinkAlpha = 255.0f;
+				}
+
+				if (title_Effect_Alpha >= 255.0f) {
+					title_Effect_Alpha = 255.0;
+
+				}
 			}
+			else
+			{
 
 
-			if (title_Effect_Alpha >= 255.0f) {
-				title_Effect_Alpha = 255.0;
+				if (pressBlinkIncreasing) {
+					//　明るくしていくフェーズ（αを増やす）
+					title_Effect_Alpha += pressBlinkSpeed;
+
+					if (title_Effect_Alpha >= 255.0f) {
+						//　上限に達したら255で止めて今度は暗くする
+
+						title_Effect_Alpha = 255.0f;
+						pressBlinkIncreasing = false;
+
+					}
+
+
+				}
+				else {
+
+					//　暗くしていくフェーズ（α値を減らす）
+					title_Effect_Alpha -= pressBlinkSpeed;
+
+					if (title_Effect_Alpha <= 0.0f) {
+						//　加減に達したら０で止めて、また明るくするフェーズへ
+						title_Effect_Alpha = 0.0f;
+						pressBlinkIncreasing = true;
+					}
+				}
 			}
-	
+			
+
+			
 		}
 
 
@@ -90,6 +134,7 @@ void GameManager::UpdateTitle() {
 	}
 
 }
+
 
 
 void GameManager::UpdateGame() {
@@ -141,14 +186,17 @@ void GameManager::DrawTitle()
 
 	DrawGraph(820, 300, kusa_2, TRUE);
 
-	
+
+	bool isDistort = title_flag || title_flag2;
+
+	if (!isDistort) {
 		DrawGraph(445, 10, titleLogo, TRUE);
-	
-
-	if (title_flag) {
-		DrawGraph(445, 10, titleLogo2, TRUE);
-
 	}
+	else {
+
+		DrawGraph(445, 10, titleLogo2, TRUE);
+	}
+	
 	
 
 
@@ -168,7 +216,7 @@ void GameManager::DrawTitle()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
 
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)logo_Enter_Alpha);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)pressBlinkAlpha);
 
 
 	DrawGraph(510, 460, PressEnterKey, TRUE);
@@ -223,13 +271,13 @@ void GameManager::GameInit() {
 
 
 	// アニメーションの初期化
-	hibana.Init("titlehibana", 99, 3, 3, "delay-0.04s", 2.3f);
+	hibana.Init("titlehibana", 99, 1, 3, "delay-0.04s", 2.3f);
 
-	noize.Init("titlenoize", 88, 2, 2, "delay-0.033333333333333s", 6.0f);
+	noize.Init("titlenoize", 88, 2, 1, "delay-0.033333333333333s", 6.0f);
 
-	movenoize.Init("movenoize", 89, 9, 2, "delay-0.033333333333333s", 6.0f);
+	movenoize.Init("movenoize", 89, 3, 2, "delay-0.033333333333333s", 6.0f);
 
-	title_effect.Init("title_effect", 89, 5, 2, "delay-0.041666666666667s", 1.1f);
+	title_effect.Init("title_effect", 89, 2, 2, "delay-0.041666666666667s", 1.1f);
 
 	// タイトルロゴ画像の読み込み
 	titleLogo = LoadGraph("TitleLogo/titlelogo.png");
@@ -280,11 +328,10 @@ void GameManager::GameInit() {
 	PlaySoundMem(titleBGM, DX_PLAYTYPE_LOOP);
 
 
-	ChangeVolumeSoundMem(90, titleBGM);  // 1フレームで音量180にする
+	ChangeVolumeSoundMem(160, titleBGM);  // 1フレームで音量180にする
 
 	//　タイトルメニュー画像の透明度変数
 
-	pressAlpha = 255.0f;
 
 	menualpha = 0.0f;
 
@@ -318,10 +365,13 @@ void GameManager::GameUpdate() {
 	switch (currentScene) {
 
 	case SceneType::TITLE:
+
+
+		UpdateLogoDistortion();
+
 		// ノイズ待ち時間を減らす
 		noiseTimer--;
 
-		title_flag = false;
 
 		// 0以下になったら動く
 		if (noiseTimer <= 0)
@@ -340,6 +390,9 @@ void GameManager::GameUpdate() {
 
 
 				noiseY = -200;  // ノイズが自然に上から降ってくるように見える
+			}
+			else {
+				title_flag = false;
 			}
 		}
 
@@ -427,3 +480,54 @@ void GameManager::GameEnd() {
 
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+void GameManager::UpdateLogoDistortion()
+{
+
+	//　歪み中
+
+	if (title_flag2) {
+
+		distortTimer -= 1;
+
+
+
+		if (distortTimer <= 0.0f) {
+
+			title_flag2 = false;
+
+
+			distortInterval = GetRand(120) + 30;
+
+		}
+	}
+	else
+	{
+		distortInterval -= 1;
+
+		if (distortInterval <= 0.0f)
+		{
+
+
+			title_flag2 = true;
+
+
+			distortTimer = GetRand(10) + 2;
+		}
+
+
+	}
+
+
+}
