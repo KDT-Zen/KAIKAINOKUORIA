@@ -19,7 +19,14 @@ enum class TitlePhase {
 	MenuFadein,
 
 	// メニュー選択中
-	MenuSelect
+	MenuSelect,
+
+	//　メニューの項目選択状態の変更　（上）
+	MenuSelect_W,
+
+
+	//　メニューの項目選択状態の変更　（下）
+	MenuSelect_S
 
 };
 
@@ -93,17 +100,23 @@ public:
 	//　歪んでるタイトルロゴの表示を切り替えるFlag
 	bool title_flag2 = false;
 
+	//　タイトルの選択項目のエフェクトの透明度切り替えを管理するFlag
+	bool select_effect_flag = false;
+
 	//　歪を管理する変数
 	float distortTimer = 0.0f;
 
 	float distortInterval = 0.0f;
 
 	int noiseY = 0;          // ノイズの描画Y位置
+
 	int noiseMoveCounter = 0; // ノイズ移動用のカウンタ
 
 	int noiseTimer = 0;
 
-	
+	//　タイトルの項目選択エフェクトのY軸変数
+	int select_effect_Y = 0;
+
 
 
 	void GameInit();
@@ -133,10 +146,17 @@ private:
 	float menualpha = 0.0f;
 
 	//　タイトル項目透明度変数
-	float title_Effect_Alpha = 0.0f;
+	float Select_Effect_Alpha = 0.0f;
 
 	// ロゴ透明度変数
 	float logo_Alpha = 0.0f;
+
+	//　タイトルメニュー全体のアルファ値を管理する変数
+	float Menu_Text_Alpha = 0.0f;
+
+
+
+
 
 	////　キー入力待ち画像透明度変数
 	//float pressAlpha = 0.0f;
@@ -182,13 +202,19 @@ private:
 
 	void DrawTitle();
 
-	void DrawPressAny();
+	void TitleLogo();
+
+	void SelectEffect();
+
+	void DrawPressEnterKey();
 
 	void DrawTitleAnim();
 
 	void DrawFadeOut();
 
 	void DrawFadeIn();
+
+	void TitleMenuText();
 
 	void DrawGame();
 
