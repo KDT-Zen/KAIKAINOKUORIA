@@ -10,7 +10,6 @@
 //メモ GameManager&は戻値の型
 //GameManager型の参照を返す関数　という意味
 
-
 //　GameManager インスタンス
 GameManager& GameManager::GetInstance() {
 
@@ -43,11 +42,7 @@ void GameManager::UpdateTitle() {
 
 			select_effect_flag = false;
 
-		
 		}
-
-		
-
 		//ロゴとPressAnyのフェードイン
 		if (startLogofade) {
 
@@ -75,7 +70,6 @@ void GameManager::UpdateTitle() {
 			else
 			{
 
-
 				if (pressBlinkIncreasing) {
 					//　明るくしていくフェーズ（αを増やす）
 					Select_Effect_Alpha += pressBlinkSpeed;
@@ -87,7 +81,6 @@ void GameManager::UpdateTitle() {
 						pressBlinkIncreasing = false;
 
 					}
-
 
 				}
 				else {
@@ -103,10 +96,7 @@ void GameManager::UpdateTitle() {
 				}
 			}
 			
-
-			
 		}
-
 
 		//キー入力で次に進む
 		if(InputManager::GetInstance().IsTrigger(KEY_INPUT_RETURN)){
@@ -164,10 +154,6 @@ void GameManager::UpdateTitle() {
 
 		break;
 
-
-
-
-
 	case TitlePhase::MenuSelect:
 
 		//　キー入力の受付
@@ -180,10 +166,7 @@ void GameManager::UpdateTitle() {
 
 			select_effect_flag = false;
 
-			
-
 		}
-
 
 		//　Wキーが押された時、Select_Effect_Alphaの値を徐々に下げる→Y軸を移動（上）→Select_Effect_Alphaの値を徐々に上げる・これらを行ってエフェクトのY軸移動を行う
 		if (InputManager::GetInstance().IsTrigger(KEY_INPUT_W)) {
@@ -195,14 +178,6 @@ void GameManager::UpdateTitle() {
 
 		break;
 
-
-
-
-
-
-
-
-
 	case TitlePhase::MenuSelect_S:
 
 
@@ -212,7 +187,6 @@ void GameManager::UpdateTitle() {
 
 		}
 		
-
 		//　完全に消えたら
 		if (Select_Effect_Alpha <= 0) {
 
@@ -253,7 +227,6 @@ void GameManager::UpdateTitle() {
 			Select_Effect_Alpha -= 20;
 
 		}
-
 
 		//　完全に消えたら
 		if (Select_Effect_Alpha <= 0) {
@@ -545,15 +518,17 @@ void GameManager::DrawPressEnterKey() {
 
 }
 
-
+//　ゲーム中のDraw関数
 void GameManager::DrawGame() {
 
 }
 
+//　エンディングのDraw関数
 void GameManager::DrawEnd() {
 
 }
 
+// ゲームの初期化
 void GameManager::GameInit() {
 
 
@@ -645,6 +620,7 @@ void GameManager::GameInit() {
 
 }
 
+//ゲームの更新
 void GameManager::GameUpdate() {
 
 	// フェードの更新
@@ -726,6 +702,7 @@ void GameManager::GameUpdate() {
 
 }
 
+// ゲームの描画
 void GameManager::GameDraw() {
 
 	switch (currentScene) {
@@ -756,6 +733,7 @@ void GameManager::GameDraw() {
 	fader.Draw();
 }
 
+// ゲームの終了処理
 void GameManager::GameEnd() {
 
 	DeleteGraph(titleBG);
@@ -786,6 +764,7 @@ void GameManager::GameEnd() {
 
 };
 
+// ロゴの歪み更新
 void GameManager::UpdateLogoDistortion()
 {
 
