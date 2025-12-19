@@ -7,10 +7,8 @@
 #include "Animation.h"
 #include "InputManager.h"
 
-
 //メモ GameManager&は戻値の型
 //GameManager型の参照を返す関数　という意味
-
 
 GameManager& GameManager::GetInstance() {
 
@@ -34,28 +32,35 @@ void GameManager::UpdateTitle() {
 			startLogofade = true;
 
 			//　それぞれのアルファ値の設定
-			logo_Enter_Alpha = 0.0f;
-			pressBlinkAlpha = 0.0f;
+			logo_Alpha = 0.0f;
+
+			T_Prees_Enter_Alpha = 0.0f;
 
 		
 		}
 
+		
+
 		//ロゴとPressAnyのフェードイン
 		if (startLogofade) {
 
-			logo_Enter_Alpha += 2.0f;
+			logo_Alpha += 2.0f;
 
-			pressBlinkAlpha += 2.0f;
+			T_Prees_Enter_Alpha += 2.0f;
 
 			if (title_Effect_Alpha < 255.0f) {
 
-				if (logo_Enter_Alpha >= 255.0f) {
-					logo_Enter_Alpha = 255.0f;
+				if (logo_Alpha >= 255.0f) {
+
+					logo_Alpha = 255.0f;
+
 					title_Effect_Alpha += 4.0;
-					pressBlinkAlpha = 255.0f;
+
+					T_Prees_Enter_Alpha = 255.0f;
 				}
 
 				if (title_Effect_Alpha >= 255.0f) {
+
 					title_Effect_Alpha = 255.0;
 
 				}
@@ -101,23 +106,32 @@ void GameManager::UpdateTitle() {
 			currentTitlePhase = TitlePhase::PressFadeOut;
 	/*		startLogofade = false;*/
 		}
-
-
-
 		break;
 
 	case TitlePhase::PressFadeOut:
 
 		//　ロゴとPressAnyのフェードアウト
-		logo_Enter_Alpha -= 5;
+		logo_Alpha -= 5;
+		T_Prees_Enter_Alpha -= 5;
+		title_Effect_Alpha -= 5;
 
 
 		// 透明度の下限チェック
-		if (logo_Enter_Alpha <= 0) logo_Enter_Alpha = 0;
+
+		//　タイトルロゴ
+		if (logo_Alpha <= 0) logo_Alpha = 0; 
 	
+		//　タイトルテキストロゴ
+		if (logo_Alpha <= 0) T_Prees_Enter_Alpha = 0;
+
+
+		//　タイトルエフェクト
+		if (logo_Alpha <= 0) title_Effect_Alpha = 0;
+
+		
 
 		// 完全に消えたら次のフェーズへ
-		if (logo_Enter_Alpha == 0) {
+		if (logo_Alpha == 0) {
 			currentTitlePhase = TitlePhase::MenuFadein;
 		}
 
@@ -149,21 +163,72 @@ void GameManager::UpdateEnd() {
 
 }
 
-
 // シーン変更
 void GameManager::ChangeScene(SceneType next) {
 	currentScene = next;
 }
 
-
-
-
 void GameManager::DrawTitle()
 {
+
+	//　タイトルのフェーズ状態で描画する物を分ける
+	switch (currentTitlePhase) {
+
+		//　PressAny　最初の画面の時
+	case TitlePhase::PressAny:
+
+		DrawPressAny();
+
+		DrawTitleAnim();
+
+		break;
+
+
+		//　キーが押された時のフェードアウト
+	case TitlePhase::PressFadeOut:
+
+		DrawPressAny();
+
+		DrawTitleAnim();
+
+
+		break;
+
+
+		//　キーが押された時のフェードイン
+	case TitlePhase::MenuFadein:
+
+		DrawPressAny();
+
+		DrawTitleAnim();
+
+
+		break;
+
+		//　タイトルメニュー状態の時
+	case TitlePhase::MenuSelect:
+
+
+
+		DrawPressAny();
+
+		DrawTitleAnim();
+
+		break;
+
+	}
+
+}
+
+// TITLE時の画面描画
+void GameManager::DrawPressAny() {
+
+
+
 	DrawExtendGraph(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, titleBG, TRUE);
 
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA,(int)logo_Enter_Alpha);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)logo_Alpha);
 
 
 
@@ -196,8 +261,8 @@ void GameManager::DrawTitle()
 
 		DrawGraph(445, 10, titleLogo2, TRUE);
 	}
-	
-	
+
+
 
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
@@ -207,7 +272,7 @@ void GameManager::DrawTitle()
 
 
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)logo_Enter_Alpha);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)logo_Alpha);
 
 
 	title_effect.Draw(510, 420, title_Effect_Alpha);
@@ -216,7 +281,7 @@ void GameManager::DrawTitle()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
 
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)pressBlinkAlpha);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)T_Prees_Enter_Alpha);
 
 
 	DrawGraph(510, 460, PressEnterKey, TRUE);
@@ -234,17 +299,24 @@ void GameManager::DrawTitle()
 
 
 
-	movenoize.Draw(0, 0,20);
+
+}
+
+// TITLE時のアニメーション描画
+void GameManager::DrawTitleAnim() {
 
 
-	hibana.Draw(0, 300,255);
+	movenoize.Draw(0, 0, 20);
+
+
+	hibana.Draw(0, 300, 255);
 
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 90); // 透明度50%
 
 
 
-	noize.Draw(0, noiseY,255);
+	noize.Draw(0, noiseY, 255);
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
 
@@ -257,8 +329,6 @@ void GameManager::DrawGame() {
 void GameManager::DrawEnd() {
 
 }
-
-
 
 void GameManager::GameInit() {
 
@@ -422,7 +492,6 @@ void GameManager::GameUpdate() {
 
 void GameManager::GameDraw() {
 
-
 	switch (currentScene) {
 
 	case SceneType::TITLE:
@@ -480,17 +549,6 @@ void GameManager::GameEnd() {
 
 
 };
-
-
-
-
-
-
-
-
-
-
-
 
 void GameManager::UpdateLogoDistortion()
 {

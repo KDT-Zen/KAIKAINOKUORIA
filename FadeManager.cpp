@@ -59,7 +59,7 @@ void FadeManager::Update() {
 }
 
 
-
+//　真っ黒な図形を用いたフェードアウトの描画
 void FadeManager::Draw() {
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);

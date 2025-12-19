@@ -121,7 +121,7 @@ public:
 private:
 
 	//　PressEnterKey 用の点滅アルファ値
-	float pressBlinkAlpha = 0.0f;
+	float T_Prees_Enter_Alpha = 0.0f;
 
 	//　今明るくなっている最中かどうか（true =　フェードイン中/　false　= フェードアウト）
 	bool pressBlinkIncreasing = true;
@@ -132,15 +132,14 @@ private:
 	// メニュー透明度画像変数
 	float menualpha = 0.0f;
 
-
 	//　タイトル項目透明度変数
 	float title_Effect_Alpha = 0.0f;
 
 	// ロゴ透明度変数
-	float logo_Enter_Alpha = 0.0f;
+	float logo_Alpha = 0.0f;
 
-	//　キー入力待ち画像透明度変数
-	float pressAlpha = 0.0f;
+	////　キー入力待ち画像透明度変数
+	//float pressAlpha = 0.0f;
 
 	// ロゴフェード開始フラグ
 	bool startLogofade = false;
@@ -182,6 +181,14 @@ private:
 	void UpdateEnd();
 
 	void DrawTitle();
+
+	void DrawPressAny();
+
+	void DrawTitleAnim();
+
+	void DrawFadeOut();
+
+	void DrawFadeIn();
 
 	void DrawGame();
 
