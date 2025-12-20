@@ -26,7 +26,10 @@ enum class TitlePhase {
 
 
 	//　メニューの項目選択状態の変更　（下）
-	MenuSelect_S
+	MenuSelect_S,
+
+	//　インゲームへの移行
+	NextSceneInGame
 
 };
 
@@ -105,6 +108,22 @@ public:
 
 	//　タイトルの選択項目のエフェクトの透明度切り替えを管理するFlag
 	bool select_effect_flag = false;
+
+	//　タイトルメニュー時、選択されている項目を判断するFlag
+	// 
+	//　ニューゲーム用フラグ
+	bool newgame_flag = false;
+
+	//　テストプレイ用フラグ
+	bool testplay_flag = false;
+
+	//　オプション用フラグ
+	bool option_flag = false;
+
+	//　終了用フラグ
+	bool exit_flag = false;
+
+
 
 	//　歪を管理する変数
 	float distortTimer = 0.0f;

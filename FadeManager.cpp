@@ -22,6 +22,8 @@ void FadeManager::StartFadeIn(int sp) {
 
 }
 
+
+
 void FadeManager::StartFadeOut(int sp) {
 
 	speed = sp;
@@ -82,3 +84,4 @@ bool FadeManager::IsFading()const {
 
 
 }
+

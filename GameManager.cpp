@@ -184,6 +184,77 @@ void GameManager::UpdateTitle() {
 			select_effect_flag = false;
 		}
 
+
+		//　選択エフェクトのY座標　＝～～の時、フラグを切り替える。選択中の項目の判定
+
+
+		//　セレクトエフェクトがニューゲームの項目にある時、ニューゲームのフラグをTRUEにする
+		if (select_effect_Y == 170) {
+			newgame_flag = true;
+
+		}
+		else {//　じゃないときはfalse
+
+			newgame_flag = false;
+		}
+
+		//　セレクトエフェクトがテストプレイの項目にある時、テストプレイのフラグをTRUEにする
+		if (select_effect_Y == 270) {
+			testplay_flag = true;
+
+		}
+		else {
+
+			testplay_flag = false;
+		}
+
+		//　セレクトエフェクトがオプションの項目にある時、オプションのフラグをTRUEにする
+		if (select_effect_Y == 370) {
+			option_flag = true;
+
+		}
+		else {
+
+			option_flag = false;
+		}
+
+		//　セレクトエフェクトが終了の項目にある時、終了のフラグをTRUEにする
+		if (select_effect_Y == 470) {
+			exit_flag = true;
+
+		}
+		else {
+
+			exit_flag = false;
+		}
+
+
+		if (newgame_flag && InputManager::GetInstance().IsTrigger(KEY_INPUT_RETURN)) {
+
+
+			//　インゲームへの移行フェーズの場合、フェードアウトを行う。
+		
+				fader.StartFadeOut();
+
+
+				if (fader.IsFading()) {
+
+					currentTitlePhase = TitlePhase::NextSceneInGame;
+
+				}
+
+				
+		
+		}
+
+
+
+
+
+
+
+
+
 		break;
 
 	case TitlePhase::MenuSelect_S:
@@ -268,6 +339,13 @@ void GameManager::UpdateTitle() {
 	
 		break;
 
+	case TitlePhase::NextSceneInGame:
+
+		GameManager::ChangeScene(SceneType::GAME);
+
+		break;
+
+
 	}
 
 }
@@ -323,7 +401,6 @@ void GameManager::DrawTitle()
 
 		DrawTitleAnim();
 
-	
 		break;
 
 
@@ -338,9 +415,6 @@ void GameManager::DrawTitle()
 
 		TitleMenuText();
 
-		
-
-
 		break;
 
 		//　タイトルメニュー状態の時
@@ -353,8 +427,6 @@ void GameManager::DrawTitle()
 		SelectEffect();
 
 		TitleMenuText();
-
-		
 
 		break;
 
@@ -369,9 +441,6 @@ void GameManager::DrawTitle()
 
 		TitleMenuText();
 
-	
-
-
 		break;
 
 
@@ -385,8 +454,19 @@ void GameManager::DrawTitle()
 
 		TitleMenuText();
 
-		
+		break;
 
+	case TitlePhase::NextSceneInGame:
+
+		TitleLogo();
+
+		DrawTitleAnim();
+
+		SelectEffect();
+
+		TitleMenuText();
+
+		
 
 		break;
 
