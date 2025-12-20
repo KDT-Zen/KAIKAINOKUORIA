@@ -360,7 +360,6 @@ void GameManager::DrawTitle()
 
 		TitleLogo();
 
-		BG_bokasi();
 
 		SelectEffect();
 
@@ -375,8 +374,6 @@ void GameManager::DrawTitle()
 	case TitlePhase::MenuSelect_W:
 
 		TitleLogo();
-
-		BG_bokasi();
 
 		SelectEffect();
 
@@ -540,13 +537,6 @@ void GameManager::DrawPressEnterKey() {
 
 }
 
-
-void GameManager::BG_bokasi() {
-
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)BG_Bokasi_Alpha);
-	DrawGraph(0, 0, titleBG_bokasi, TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // å≥Ç…ñﬂÇ∑
-}
 
 //Å@ÉQÅ[ÉÄíÜÇÃDrawä÷êî
 void GameManager::DrawGame() {
