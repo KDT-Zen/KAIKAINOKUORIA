@@ -43,6 +43,9 @@ public:
 	//　タイトル背景
 	int titleBG;
 
+	//　タイトル背景ぼかし
+	int titleBG_bokasi;
+
 	//　タイトルロゴ
 	int titleLogo;
 
@@ -154,6 +157,10 @@ private:
 	//　タイトルメニュー全体のアルファ値を管理する変数
 	float Menu_Text_Alpha = 0.0f;
 
+	//　ぼかし背景のアルファ値管理
+
+	float BG_Bokasi_Alpha = 0.0f;
+
 
 
 
@@ -205,6 +212,8 @@ private:
 	void TitleLogo();
 
 	void SelectEffect();
+
+	void BG_bokasi();
 
 	void DrawPressEnterKey();
 

@@ -40,6 +40,9 @@ void GameManager::UpdateTitle() {
 
 			Menu_Text_Alpha = 0.0f;
 
+
+			BG_Bokasi_Alpha = 0.0f;
+
 			select_effect_flag = false;
 
 		}
@@ -137,9 +140,14 @@ void GameManager::UpdateTitle() {
 
 	case TitlePhase::MenuFadein:
 
+		BG_Bokasi_Alpha += 5;
+
 		Menu_Text_Alpha += 5;
 
 		Select_Effect_Alpha += 5;
+
+		if (BG_Bokasi_Alpha >= 255) Menu_Text_Alpha = 255;
+
 
 		if (Menu_Text_Alpha >= 255) Menu_Text_Alpha = 255;
 
@@ -324,6 +332,7 @@ void GameManager::DrawTitle()
 
 		TitleLogo();
 
+
 		SelectEffect();
 
 		TitleMenuText();
@@ -351,6 +360,8 @@ void GameManager::DrawTitle()
 
 		TitleLogo();
 
+		BG_bokasi();
+
 		SelectEffect();
 
 		TitleMenuText();
@@ -364,6 +375,8 @@ void GameManager::DrawTitle()
 	case TitlePhase::MenuSelect_W:
 
 		TitleLogo();
+
+		BG_bokasi();
 
 		SelectEffect();
 
@@ -385,29 +398,38 @@ void GameManager::TitleLogo() {
 
 	DrawExtendGraph(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, titleBG, TRUE);
 
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)BG_Bokasi_Alpha);
+
+	DrawExtendGraph(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, titleBG_bokasi, TRUE);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
+
+	DrawBox(0, 0, WINDOW_WIDTH, 150, GetColor(10, 10, 10),TRUE);
+
+	DrawBox(0, WINDOW_HEIGHT, WINDOW_WIDTH, 570, GetColor(10, 10, 10), TRUE);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)logo_Alpha);
 
 
 
-	DrawGraph(700, 40, cloud_2, TRUE);
+	DrawGraph(700, 100, cloud_2, TRUE);
 
 
 
-	DrawGraph(390, -50, keinai, TRUE);
+	DrawGraph(390, 10, keinai, TRUE);
 
-	DrawGraph(390, 150, cloud_1, TRUE);
-
-
-
-	DrawGraph(340, 300, title_hund1, TRUE);
-
-	DrawGraph(790, 20, title_hund2, TRUE);
+	DrawGraph(390, 210, cloud_1, TRUE);
 
 
-	DrawGraph(340, 450, kusa_1, TRUE);
 
-	DrawGraph(820, 300, kusa_2, TRUE);
+	DrawGraph(340, 360, title_hund1, TRUE);
+
+	DrawGraph(790, 80, title_hund2, TRUE);
+
+
+	DrawGraph(340, 510, kusa_1, TRUE);
+
+	DrawGraph(820, 360, kusa_2, TRUE);
 
 
 	bool isDistort = title_flag || title_flag2;
@@ -512,10 +534,18 @@ void GameManager::DrawPressEnterKey() {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)T_Prees_Enter_Alpha);
 
 
-	DrawGraph(510, 460, PressEnterKey, TRUE);
+	DrawGraph(510, 520, PressEnterKey, TRUE);
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
 
+}
+
+
+void GameManager::BG_bokasi() {
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)BG_Bokasi_Alpha);
+	DrawGraph(0, 0, titleBG_bokasi, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
 }
 
 //　ゲーム中のDraw関数
@@ -582,6 +612,9 @@ void GameManager::GameInit() {
 	// タイトル背景画像の読み込み
 	titleBG = LoadGraph("data/bg.jpg");
 
+	//　タイトル背景ぼかし画像の読み込み
+	titleBG_bokasi= LoadGraph("data/bg_bokasi.png");
+
 	// タイトルメニュー画像の読み込み
 
 	PressEnterKey = LoadGraph("data/pressenterkey.png");
@@ -614,7 +647,7 @@ void GameManager::GameInit() {
 
 	menualpha = 0.0f;
 
-	select_effect_Y = 430;
+	select_effect_Y = 490;
 
 
 
@@ -737,6 +770,8 @@ void GameManager::GameDraw() {
 void GameManager::GameEnd() {
 
 	DeleteGraph(titleBG);
+
+	DeleteGraph(titleBG_bokasi);
 
 	DeleteGraph(titleLogo);
 
