@@ -332,12 +332,13 @@ void GameManager::DrawTitle()
 
 		TitleLogo();
 
+		DrawTitleAnim();
 
 		SelectEffect();
 
 		TitleMenuText();
 
-		DrawTitleAnim();
+		
 
 
 		break;
@@ -347,11 +348,13 @@ void GameManager::DrawTitle()
 
 		TitleLogo();
 
+		DrawTitleAnim();
+
 		SelectEffect();
 
 		TitleMenuText();
 
-		DrawTitleAnim();
+		
 
 		break;
 
@@ -360,12 +363,13 @@ void GameManager::DrawTitle()
 
 		TitleLogo();
 
+		DrawTitleAnim();
 
 		SelectEffect();
 
 		TitleMenuText();
 
-		DrawTitleAnim();
+	
 
 
 		break;
@@ -375,11 +379,13 @@ void GameManager::DrawTitle()
 
 		TitleLogo();
 
+		DrawTitleAnim();
+
 		SelectEffect();
 
 		TitleMenuText();
 
-		DrawTitleAnim();
+		
 
 
 		break;
@@ -400,6 +406,8 @@ void GameManager::TitleLogo() {
 	DrawExtendGraph(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, titleBG_bokasi, TRUE);
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
+
+	MoveNoizeEffect();
 
 	DrawBox(0, 0, WINDOW_WIDTH, 150, GetColor(10, 10, 10),TRUE);
 
@@ -491,13 +499,6 @@ void GameManager::DrawTitleAnim() {
 	hibana.Draw(0, 300, 255);
 
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 15); // 透明度50%
-
-
-
-	noize.Draw(0, noiseY, 255);
-
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
 
 }
 
@@ -537,6 +538,17 @@ void GameManager::DrawPressEnterKey() {
 
 }
 
+
+void GameManager::MoveNoizeEffect() {
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 15); // 透明度50%
+
+	noize.Draw(0, noiseY, 255);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
+
+
+}
 
 //　ゲーム中のDraw関数
 void GameManager::DrawGame() {

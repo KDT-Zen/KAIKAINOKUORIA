@@ -213,7 +213,7 @@ private:
 
 	void SelectEffect();
 
-	void BG_bokasi();
+	void MoveNoizeEffect();
 
 	void DrawPressEnterKey();
 
