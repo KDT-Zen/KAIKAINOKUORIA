@@ -174,7 +174,13 @@ private:
 	float logo_Alpha = 0.0f;
 
 	//　タイトルメニュー全体のアルファ値を管理する変数
-	float Menu_Text_Alpha = 0.0f;
+	float Menu_Text_Alpha1 = 0.0f;
+
+	float Menu_Text_Alpha2 = 0.0f;
+
+	float Menu_Text_Alpha3 = 0.0f;
+
+	float Menu_Text_Alpha4 = 0.0f;
 
 	//　ぼかし背景のアルファ値管理
 

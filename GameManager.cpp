@@ -38,7 +38,13 @@ void GameManager::UpdateTitle() {
 
 			T_Prees_Enter_Alpha = 0.0f;
 
-			Menu_Text_Alpha = 0.0f;
+			Menu_Text_Alpha1 = 0.0f;
+
+			Menu_Text_Alpha2 = 0.0f;
+
+			Menu_Text_Alpha3 = 0.0f;
+
+			Menu_Text_Alpha4 = 0.0f;
 
 
 			BG_Bokasi_Alpha = 0.0f;
@@ -142,19 +148,25 @@ void GameManager::UpdateTitle() {
 
 		BG_Bokasi_Alpha += 5;
 
-		Menu_Text_Alpha += 5;
+		Menu_Text_Alpha1 += 5;
+
+		Menu_Text_Alpha2 += 5;
+
+		Menu_Text_Alpha3 += 5;
+
+		Menu_Text_Alpha4 += 5;
 
 		Select_Effect_Alpha += 5;
 
-		if (BG_Bokasi_Alpha >= 255) Menu_Text_Alpha = 255;
+		if (BG_Bokasi_Alpha >= 255) BG_Bokasi_Alpha = 255;
 
 
-		if (Menu_Text_Alpha >= 255) Menu_Text_Alpha = 255;
+		if (Menu_Text_Alpha1 >= 255) Menu_Text_Alpha1 = 255; Menu_Text_Alpha2 = 255; Menu_Text_Alpha3 = 255; Menu_Text_Alpha4 = 255;
 
 		if (Select_Effect_Alpha >= 255) Select_Effect_Alpha = 255; 
 
 
-		if (Select_Effect_Alpha == 255&& Menu_Text_Alpha == 255) {
+		if (Select_Effect_Alpha == 255&& Menu_Text_Alpha1 == 255) {
 
 
 			currentTitlePhase = TitlePhase::MenuSelect;
@@ -192,9 +204,11 @@ void GameManager::UpdateTitle() {
 		if (select_effect_Y == 170) {
 			newgame_flag = true;
 
+			Menu_Text_Alpha1 = 255;
+
 		}
 		else {//　じゃないときはfalse
-
+			Menu_Text_Alpha1 = 150;
 			newgame_flag = false;
 		}
 
@@ -202,59 +216,48 @@ void GameManager::UpdateTitle() {
 		if (select_effect_Y == 270) {
 			testplay_flag = true;
 
+			Menu_Text_Alpha2 = 255;
+
 		}
 		else {
-
+			Menu_Text_Alpha2 = 150;
 			testplay_flag = false;
 		}
 
 		//　セレクトエフェクトがオプションの項目にある時、オプションのフラグをTRUEにする
 		if (select_effect_Y == 370) {
 			option_flag = true;
-
+			Menu_Text_Alpha3 = 255;
 		}
 		else {
-
+			Menu_Text_Alpha3 = 150;
 			option_flag = false;
 		}
 
 		//　セレクトエフェクトが終了の項目にある時、終了のフラグをTRUEにする
 		if (select_effect_Y == 470) {
 			exit_flag = true;
+			Menu_Text_Alpha4 = 255;
 
 		}
 		else {
-
+			Menu_Text_Alpha4 = 150;
 			exit_flag = false;
 		}
-
 
 		if (newgame_flag && InputManager::GetInstance().IsTrigger(KEY_INPUT_RETURN)) {
 
 
 			//　インゲームへの移行フェーズの場合、フェードアウトを行う。
-		
 				fader.StartFadeOut();
 
-
+				// フェードアウトし終えていたらTitlePhaseをNextSceneInGameに移行
 				if (fader.IsFading()) {
 
 					currentTitlePhase = TitlePhase::NextSceneInGame;
 
 				}
-
-				
-		
 		}
-
-
-
-
-
-
-
-
-
 		break;
 
 	case TitlePhase::MenuSelect_S:
@@ -341,13 +344,11 @@ void GameManager::UpdateTitle() {
 
 	case TitlePhase::NextSceneInGame:
 
+		//　現在のシーンをGAMEに移行する
 		GameManager::ChangeScene(SceneType::GAME);
 
 		break;
-
-
 	}
-
 }
 
 //　アップデート関数Game
@@ -587,20 +588,25 @@ void GameManager::TitleMenuText() {
 
 
 	//　テキスト画像描画
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)Menu_Text_Alpha);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)Menu_Text_Alpha1);
 
 	//　NewGame
-	DrawGraph(510, 200, NewGame, TRUE);
+	DrawGraph(465, 180, NewGame, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
 
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)Menu_Text_Alpha2);
 	//　TestPlay
-	DrawGraph(510, 300, TestPlay, TRUE);
+	DrawGraph(445, 280, TestPlay, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
 
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)Menu_Text_Alpha3);
 	// Option 
-	DrawGraph(510, 400, Option, TRUE);
+	DrawGraph(470, 380, Option, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
 
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)Menu_Text_Alpha4);
 	// Exit
-	DrawGraph(510, 500, Exit, TRUE);
-
+	DrawGraph(525, 480, Exit, TRUE);
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // 元に戻す
 
