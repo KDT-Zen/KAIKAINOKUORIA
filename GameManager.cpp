@@ -10,8 +10,6 @@
 //メモ GameManager&は戻値の型
 //GameManager型の参照を返す関数　という意味
 
-
-
 //　GameManager インスタンス
 GameManager& GameManager::GetInstance() {
 
@@ -20,8 +18,6 @@ GameManager& GameManager::GetInstance() {
 
 	return instance;
 }
-
-
 
 // ゲームの初期化
 void GameManager::GameInit() {
@@ -801,7 +797,6 @@ void GameManager::DrawGame() {
 void GameManager::DrawEnd() {
 
 }
-
 
 //ゲームの更新
 void GameManager::GameUpdate() {
