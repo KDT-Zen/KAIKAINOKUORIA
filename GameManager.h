@@ -82,6 +82,18 @@ public:
 	//　タイトルBGM
 	int titleBGM;
 
+	//　タイトルSE
+	int titleSE;
+
+	//　タイトルSE
+	int titleSE_click;
+
+
+	//　音量調節
+	int SE_ChangeV;
+
+	int BGM_ChangeV;
+
 	//　タイトル項目
 	int NewGame;
 

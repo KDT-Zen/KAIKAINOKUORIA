@@ -10,6 +10,8 @@
 //メモ GameManager&は戻値の型
 //GameManager型の参照を返す関数　という意味
 
+
+
 //　GameManager インスタンス
 GameManager& GameManager::GetInstance() {
 
@@ -17,6 +19,112 @@ GameManager& GameManager::GetInstance() {
 	static GameManager instance;
 
 	return instance;
+}
+
+
+
+// ゲームの初期化
+void GameManager::GameInit() {
+
+
+	// フェードの初期化
+	fader.Init();
+
+	// フェードイン開始
+	fader.StartFadeIn(6);
+
+
+
+	/// <summary>
+	/// ////////////////////////////////////////////////////////////////////////////////////
+	/// 
+	/// 画像の読み込み
+	/// 
+	/// </summary>
+	// アニメーションの初期化
+	hibana.Init("titlehibana", 99, 1, 3, "delay-0.04s", 2.3f);
+
+	noize.Init("titlenoize", 88, 2, 1, "delay-0.033333333333333s", 6.0f);
+
+	movenoize.Init("movenoize", 89, 3, 2, "delay-0.033333333333333s", 6.0f);
+
+	title_effect.Init("title_effect", 89, 2, 2, "delay-0.041666666666667s", 1.1f);
+
+	// タイトルロゴ画像の読み込み
+	titleLogo = LoadGraph("TitleLogo/titlelogo.png");
+
+	titleLogo2 = LoadGraph("TitleLogo/titlelogo2.png");
+
+	keinai = LoadGraph("TitleLogo/keinai.png");
+
+	kusa_1 = LoadGraph("TitleLogo/kusa_1.png");
+
+	kusa_2 = LoadGraph("TitleLogo/kusa_2.png");
+
+	title_hund1 = LoadGraph("TitleLogo/title_hund1.png");
+
+	title_hund2 = LoadGraph("TitleLogo/title_hund2.png");
+
+	cloud_1 = LoadGraph("TitleLogo/cloud_1.png");
+
+	cloud_2 = LoadGraph("TitleLogo/cloud_2.png");
+
+	/*titlenoize = LoadGraph("data/titlenoize.png");*/
+
+	// タイトルBGMの読み込みと再生
+	titleBGM = LoadSoundMem("data/titlebgm.wav");
+
+	//　タイトルSE決定の読み込み
+	titleSE_click = LoadSoundMem("SE/SE_click.wav");
+
+	//　タイトルSE項目選択
+	titleSE = LoadSoundMem("SE/SE_koumoku.mp3");
+
+	// タイトル背景画像の読み込み
+	titleBG = LoadGraph("data/bg.jpg");
+
+	//　タイトル背景ぼかし画像の読み込み
+	titleBG_bokasi = LoadGraph("data/bg_bokasi.png");
+
+	// タイトルメニュー画像の読み込み
+
+	PressEnterKey = LoadGraph("data/pressenterkey.png");
+
+	NewGame = LoadGraph("data/newgame.png");
+
+	Option = LoadGraph("data/option.png");
+
+	Exit = LoadGraph("data/exit.png");
+
+	TestPlay = LoadGraph("data/testplay.png");
+
+
+	/// <summary>
+	/// ////////////////////////////////////////////////////////////////////////////////////////
+	/// 
+	/// 画像の読み込み
+	/// 
+	/// </summary>
+	BGM_ChangeV = 170;
+	SE_ChangeV = 150;
+
+
+
+	ChangeVolumeSoundMem(BGM_ChangeV, titleBGM);  // 1フレームで音量180にする
+	// タイトルBGMの再生
+	PlaySoundMem(titleBGM, DX_PLAYTYPE_LOOP);
+
+
+
+	//　タイトルメニュー画像の透明度変数
+
+
+	menualpha = 0.0f;
+
+	select_effect_Y = 490;
+
+
+
 }
 
 //　アップデート関数Title
@@ -107,9 +215,17 @@ void GameManager::UpdateTitle() {
 			
 		}
 
+
+
 		//キー入力で次に進む
 		if(InputManager::GetInstance().IsTrigger(KEY_INPUT_RETURN)){
 			currentTitlePhase = TitlePhase::PressFadeOut;
+
+			ChangeVolumeSoundMem(SE_ChangeV, titleSE_click);
+			PlaySoundMem(titleSE_click, DX_PLAYTYPE_BACK);
+
+			
+
 	/*		startLogofade = false;*/
 		}
 		break;
@@ -161,7 +277,10 @@ void GameManager::UpdateTitle() {
 		if (BG_Bokasi_Alpha >= 255) BG_Bokasi_Alpha = 255;
 
 
-		if (Menu_Text_Alpha1 >= 255) Menu_Text_Alpha1 = 255; Menu_Text_Alpha2 = 255; Menu_Text_Alpha3 = 255; Menu_Text_Alpha4 = 255;
+		if (Menu_Text_Alpha1 >= 255) Menu_Text_Alpha1 = 255; 
+
+		if(Menu_Text_Alpha2 >= 170) Menu_Text_Alpha2 = 170; Menu_Text_Alpha3 = 170; Menu_Text_Alpha4 = 170;
+
 
 		if (Select_Effect_Alpha >= 255) Select_Effect_Alpha = 255; 
 
@@ -182,6 +301,10 @@ void GameManager::UpdateTitle() {
 		//　Sキーが押された時、Select_Effect_Alphaの値を徐々に下げる→Y軸を移動（下）→Select_Effect_Alphaの値を徐々に上げる・これらを行ってエフェクトのY軸移動を行う
 		if (InputManager::GetInstance().IsTrigger(KEY_INPUT_S)) {
 
+
+			ChangeVolumeSoundMem(SE_ChangeV, titleSE);
+			PlaySoundMem(titleSE, DX_PLAYTYPE_BACK);
+
 			currentTitlePhase = TitlePhase::MenuSelect_S;
 
 			select_effect_flag = false;
@@ -190,6 +313,10 @@ void GameManager::UpdateTitle() {
 
 		//　Wキーが押された時、Select_Effect_Alphaの値を徐々に下げる→Y軸を移動（上）→Select_Effect_Alphaの値を徐々に上げる・これらを行ってエフェクトのY軸移動を行う
 		if (InputManager::GetInstance().IsTrigger(KEY_INPUT_W)) {
+
+
+			ChangeVolumeSoundMem(SE_ChangeV, titleSE);
+			PlaySoundMem(titleSE, DX_PLAYTYPE_BACK);
 
 			currentTitlePhase = TitlePhase::MenuSelect_W;
 
@@ -247,6 +374,14 @@ void GameManager::UpdateTitle() {
 
 		if (newgame_flag && InputManager::GetInstance().IsTrigger(KEY_INPUT_RETURN)) {
 
+			ChangeVolumeSoundMem(SE_ChangeV, titleSE_click);
+			PlaySoundMem(titleSE_click, DX_PLAYTYPE_BACK);
+
+
+		
+			
+
+
 
 			//　インゲームへの移行フェーズの場合、フェードアウトを行う。
 				fader.StartFadeOut();
@@ -254,7 +389,10 @@ void GameManager::UpdateTitle() {
 				// フェードアウトし終えていたらTitlePhaseをNextSceneInGameに移行
 				if (fader.IsFading()) {
 
+
 					currentTitlePhase = TitlePhase::NextSceneInGame;
+
+					
 
 				}
 		}
@@ -344,8 +482,26 @@ void GameManager::UpdateTitle() {
 
 	case TitlePhase::NextSceneInGame:
 
-		//　現在のシーンをGAMEに移行する
-		GameManager::ChangeScene(SceneType::GAME);
+		BGM_ChangeV -= 5;
+
+		if (BGM_ChangeV < 0) {
+
+			BGM_ChangeV = 0;
+
+			
+
+		}
+
+		ChangeVolumeSoundMem(BGM_ChangeV, titleBGM);
+
+		if (BGM_ChangeV == 0) {
+
+			StopSoundMem(titleBGM);
+
+			//　現在のシーンをGAMEに移行する
+			GameManager::ChangeScene(SceneType::GAME);
+
+		}
 
 		break;
 	}
@@ -646,100 +802,6 @@ void GameManager::DrawEnd() {
 
 }
 
-// ゲームの初期化
-void GameManager::GameInit() {
-
-
-	// フェードの初期化
-	fader.Init();
-
-	// フェードイン開始
-	fader.StartFadeIn(6);
-
-
-
-	/// <summary>
-	/// ////////////////////////////////////////////////////////////////////////////////////
-	/// 
-	/// 画像の読み込み
-	/// 
-	/// </summary>
-	// アニメーションの初期化
-	hibana.Init("titlehibana", 99, 1, 3, "delay-0.04s", 2.3f);
-
-	noize.Init("titlenoize", 88, 2, 1, "delay-0.033333333333333s", 6.0f);
-
-	movenoize.Init("movenoize", 89, 3, 2, "delay-0.033333333333333s", 6.0f);
-
-	title_effect.Init("title_effect", 89, 2, 2, "delay-0.041666666666667s", 1.1f);
-
-	// タイトルロゴ画像の読み込み
-	titleLogo = LoadGraph("TitleLogo/titlelogo.png");
-
-	titleLogo2 = LoadGraph("TitleLogo/titlelogo2.png");
-
-	keinai = LoadGraph("TitleLogo/keinai.png");
-
-	kusa_1 = LoadGraph("TitleLogo/kusa_1.png");
-
-	kusa_2 = LoadGraph("TitleLogo/kusa_2.png");
-
-	title_hund1 = LoadGraph("TitleLogo/title_hund1.png");
-
-	title_hund2 = LoadGraph("TitleLogo/title_hund2.png");
-
-	cloud_1 = LoadGraph("TitleLogo/cloud_1.png");
-
-	cloud_2 = LoadGraph("TitleLogo/cloud_2.png");
-
-	/*titlenoize = LoadGraph("data/titlenoize.png");*/
-
-	// タイトルBGMの読み込みと再生
-	titleBGM = LoadSoundMem("data/titlebgm.wav");
-
-	// タイトル背景画像の読み込み
-	titleBG = LoadGraph("data/bg.jpg");
-
-	//　タイトル背景ぼかし画像の読み込み
-	titleBG_bokasi= LoadGraph("data/bg_bokasi.png");
-
-	// タイトルメニュー画像の読み込み
-
-	PressEnterKey = LoadGraph("data/pressenterkey.png");
-
-	NewGame = LoadGraph("data/newgame.png");
-
-	Option = LoadGraph("data/option.png");
-
-	Exit = LoadGraph("data/exit.png");
-
-	TestPlay = LoadGraph("data/testplay.png");
-
-
-	/// <summary>
-	/// ////////////////////////////////////////////////////////////////////////////////////////
-	/// 
-	/// 画像の読み込み
-	/// 
-	/// </summary>
-
-
-	// タイトルBGMの再生
-	PlaySoundMem(titleBGM, DX_PLAYTYPE_LOOP);
-
-
-	ChangeVolumeSoundMem(160, titleBGM);  // 1フレームで音量180にする
-
-	//　タイトルメニュー画像の透明度変数
-
-
-	menualpha = 0.0f;
-
-	select_effect_Y = 490;
-
-
-
-}
 
 //ゲームの更新
 void GameManager::GameUpdate() {
@@ -883,6 +945,9 @@ void GameManager::GameEnd() {
 
 	DeleteGraph(titleLogo2);
 	StopSoundMem(titleBGM);
+
+	StopSoundMem(titleSE);
+	StopSoundMem(titleSE_click);
 
 
 };
