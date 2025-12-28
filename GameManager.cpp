@@ -135,8 +135,6 @@ void GameManager::UpdateTitle() {
 
 }
 
-
-
 void GameManager::UpdateGame() {
 
 
@@ -149,14 +147,10 @@ void GameManager::UpdateEnd() {
 
 }
 
-
 // ƒV[ƒ“•ÏX
 void GameManager::ChangeScene(SceneType next) {
 	currentScene = next;
 }
-
-
-
 
 void GameManager::DrawTitle()
 {
@@ -257,8 +251,6 @@ void GameManager::DrawGame() {
 void GameManager::DrawEnd() {
 
 }
-
-
 
 void GameManager::GameInit() {
 
@@ -480,17 +472,6 @@ void GameManager::GameEnd() {
 
 
 };
-
-
-
-
-
-
-
-
-
-
-
 
 void GameManager::UpdateLogoDistortion()
 {
