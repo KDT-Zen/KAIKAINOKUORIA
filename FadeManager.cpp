@@ -22,6 +22,8 @@ void FadeManager::StartFadeIn(int sp) {
 
 }
 
+
+
 void FadeManager::StartFadeOut(int sp) {
 
 	speed = sp;
@@ -59,7 +61,7 @@ void FadeManager::Update() {
 }
 
 
-
+//　真っ黒な図形を用いたフェードアウトの描画
 void FadeManager::Draw() {
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
@@ -82,3 +84,4 @@ bool FadeManager::IsFading()const {
 
 
 }
+

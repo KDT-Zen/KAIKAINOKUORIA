@@ -19,7 +19,17 @@ enum class TitlePhase {
 	MenuFadein,
 
 	// メニュー選択中
-	MenuSelect
+	MenuSelect,
+
+	//　メニューの項目選択状態の変更　（上）
+	MenuSelect_W,
+
+
+	//　メニューの項目選択状態の変更　（下）
+	MenuSelect_S,
+
+	//　インゲームへの移行
+	NextSceneInGame
 
 };
 
@@ -35,6 +45,9 @@ public:
 
 	//　タイトル背景
 	int titleBG;
+
+	//　タイトル背景ぼかし
+	int titleBG_bokasi;
 
 	//　タイトルロゴ
 	int titleLogo;
@@ -69,6 +82,18 @@ public:
 	//　タイトルBGM
 	int titleBGM;
 
+	//　タイトルSE
+	int titleSE;
+
+	//　タイトルSE
+	int titleSE_click;
+
+
+	//　音量調節
+	int SE_ChangeV;
+
+	int BGM_ChangeV;
+
 	//　タイトル項目
 	int NewGame;
 
@@ -93,17 +118,39 @@ public:
 	//　歪んでるタイトルロゴの表示を切り替えるFlag
 	bool title_flag2 = false;
 
+	//　タイトルの選択項目のエフェクトの透明度切り替えを管理するFlag
+	bool select_effect_flag = false;
+
+	//　タイトルメニュー時、選択されている項目を判断するFlag
+	// 
+	//　ニューゲーム用フラグ
+	bool newgame_flag = false;
+
+	//　テストプレイ用フラグ
+	bool testplay_flag = false;
+
+	//　オプション用フラグ
+	bool option_flag = false;
+
+	//　終了用フラグ
+	bool exit_flag = false;
+
+
+
 	//　歪を管理する変数
 	float distortTimer = 0.0f;
 
 	float distortInterval = 0.0f;
 
 	int noiseY = 0;          // ノイズの描画Y位置
+
 	int noiseMoveCounter = 0; // ノイズ移動用のカウンタ
 
 	int noiseTimer = 0;
 
-	
+	//　タイトルの項目選択エフェクトのY軸変数
+	int select_effect_Y = 0;
+
 
 
 	void GameInit();
@@ -121,7 +168,7 @@ public:
 private:
 
 	//　PressEnterKey 用の点滅アルファ値
-	float pressBlinkAlpha = 0.0f;
+	float T_Prees_Enter_Alpha = 0.0f;
 
 	//　今明るくなっている最中かどうか（true =　フェードイン中/　false　= フェードアウト）
 	bool pressBlinkIncreasing = true;
@@ -132,15 +179,31 @@ private:
 	// メニュー透明度画像変数
 	float menualpha = 0.0f;
 
-
 	//　タイトル項目透明度変数
-	float title_Effect_Alpha = 0.0f;
+	float Select_Effect_Alpha = 0.0f;
 
 	// ロゴ透明度変数
-	float logo_Enter_Alpha = 0.0f;
+	float logo_Alpha = 0.0f;
 
-	//　キー入力待ち画像透明度変数
-	float pressAlpha = 0.0f;
+	//　タイトルメニュー全体のアルファ値を管理する変数
+	float Menu_Text_Alpha1 = 0.0f;
+
+	float Menu_Text_Alpha2 = 0.0f;
+
+	float Menu_Text_Alpha3 = 0.0f;
+
+	float Menu_Text_Alpha4 = 0.0f;
+
+	//　ぼかし背景のアルファ値管理
+
+	float BG_Bokasi_Alpha = 0.0f;
+
+
+
+
+
+	////　キー入力待ち画像透明度変数
+	//float pressAlpha = 0.0f;
 
 	// ロゴフェード開始フラグ
 	bool startLogofade = false;
@@ -182,6 +245,22 @@ private:
 	void UpdateEnd();
 
 	void DrawTitle();
+
+	void TitleLogo();
+
+	void SelectEffect();
+
+	void MoveNoizeEffect();
+
+	void DrawPressEnterKey();
+
+	void DrawTitleAnim();
+
+	void DrawFadeOut();
+
+	void DrawFadeIn();
+
+	void TitleMenuText();
 
 	void DrawGame();
 

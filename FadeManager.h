@@ -20,6 +20,8 @@ public:
 
 	bool IsFading() const;                     // フェード中かどうか
 
+	bool IsFadingEnd() const;                 //　画面が真っ暗かどうか
+
 
 private:
 
