@@ -31,6 +31,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	// メインループ
 	while (ProcessMessage() == 0) {
+
+
+		SetWaitVSyncFlag(TRUE);
+
+		WaitTimer(16);       
+
 		// 画面をクリア
 		ClearDrawScreen();
 

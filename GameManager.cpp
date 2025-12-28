@@ -1,8 +1,9 @@
 
 
+
+#include "DxLib.h"
 #include "GameManager.h"
 #include "Scene.h"
-#include "DxLib.h"
 #include "GameDefine.h"
 #include "Animation.h"
 #include "InputManager.h"
@@ -289,6 +290,15 @@ void GameManager::UpdateTitle() {
 
 		break;
 
+
+
+
+
+
+
+
+
+
 	case TitlePhase::MenuSelect:
 
 		//　キー入力の受付
@@ -406,7 +416,7 @@ void GameManager::UpdateTitle() {
 		//　完全に消えたら
 		if (Select_Effect_Alpha <= 0) {
 
-			Select_Effect_Alpha == 0;
+			Select_Effect_Alpha = 0;
 
 			//　エフェクトの表示状態を管理するフラグをTRUEにする
 			select_effect_flag = true;
@@ -426,13 +436,24 @@ void GameManager::UpdateTitle() {
 
 			Select_Effect_Alpha = 255;
 
+			select_effect_flag = true;  
+
 			currentTitlePhase = TitlePhase::MenuSelect;
 
 		}
 
+
 		//　effectの移動可能数値を超えようとした時値の維持
-		if (select_effect_Y >= 470) select_effect_Y = 470; 
+		if (select_effect_Y >= 470) select_effect_Y = 470;
+
+
 		break;
+
+
+
+
+
+
 
 
 	case TitlePhase::MenuSelect_W:
@@ -447,7 +468,7 @@ void GameManager::UpdateTitle() {
 		//　完全に消えたら
 		if (Select_Effect_Alpha <= 0) {
 
-			Select_Effect_Alpha == 0;
+			Select_Effect_Alpha = 0;
 
 			//　エフェクトの表示状態を管理するフラグをTRUEにする
 			select_effect_flag = true;
@@ -457,11 +478,18 @@ void GameManager::UpdateTitle() {
 		}
 
 
+		if (select_effect_flag) {
+			//　effectのalpha値を徐々に上げる
+			Select_Effect_Alpha += 20;
+
+		}
 
 		//　SelectAlphaの上限管理＆フラグをfalseに戻す
 		if (Select_Effect_Alpha >= 255 && select_effect_flag) {
 
 			Select_Effect_Alpha = 255;
+
+			select_effect_flag = true;   
 
 			currentTitlePhase = TitlePhase::MenuSelect;
 
@@ -471,6 +499,12 @@ void GameManager::UpdateTitle() {
 		if (select_effect_Y <= 170) select_effect_Y = 170;
 	
 		break;
+
+
+
+
+
+
 
 	case TitlePhase::NextSceneInGame:
 
@@ -488,7 +522,7 @@ void GameManager::UpdateTitle() {
 
 		if (BGM_ChangeV == 0) {
 
-			StopSoundMem(titleBGM);
+			::StopSoundMem(titleBGM);
 
 			//　現在のシーンをGAMEに移行する
 			GameManager::ChangeScene(SceneType::GAME);
@@ -518,8 +552,18 @@ void GameManager::ChangeScene(SceneType next) {
 	currentScene = next;
 }
 
+//　タイトルのDraw関数
+void GameManager::DrawTitle() {
 
 
+	switch (currentTitlePhase) {
+
+
+		case TitlePhase::PressAny:
+
+		
+
+		TitleLogo();
 
 		DrawTitleAnim();
 
@@ -527,7 +571,56 @@ void GameManager::ChangeScene(SceneType next) {
 
 		TitleMenuText();
 
+		DrawPressEnterKey();
+
 		break;
+
+
+		case TitlePhase::PressFadeOut:
+			TitleLogo();
+			DrawTitleAnim();
+			SelectEffect();
+			TitleMenuText();
+			DrawPressEnterKey();
+			break;
+
+		case TitlePhase::MenuFadein:
+
+			TitleLogo();
+
+			DrawTitleAnim();
+
+			SelectEffect();
+
+			TitleMenuText();
+
+			break;
+
+			case TitlePhase::MenuSelect:
+
+			TitleLogo();
+
+			DrawTitleAnim();
+
+			SelectEffect();
+
+			TitleMenuText();
+
+			break;
+
+			case TitlePhase::MenuSelect_S:
+			TitleLogo();
+
+			DrawTitleAnim();
+
+			SelectEffect();
+
+			TitleMenuText();
+
+			break;
+
+
+
 
 
 	case TitlePhase::MenuSelect_W:
@@ -552,13 +645,15 @@ void GameManager::ChangeScene(SceneType next) {
 
 		TitleMenuText();
 
-		
+
 
 		break;
 
-	}
 
+
+	}
 }
+
 
 // TITLE時の画面描画
 void GameManager::TitleLogo() {
@@ -583,13 +678,13 @@ void GameManager::TitleLogo() {
 
 
 
-	DrawGraph(700, 100, cloud_2, TRUE);
+	DrawGraph(700, 10, cloud_2, TRUE);
 
 
 
-	DrawGraph(390, 10, keinai, TRUE);
+	DrawGraph(300, 38, keinai, TRUE);
 
-	DrawGraph(390, 210, cloud_1, TRUE);
+	DrawGraph(250, 270, cloud_1, TRUE);
 
 
 
@@ -597,10 +692,6 @@ void GameManager::TitleLogo() {
 
 	DrawGraph(790, 80, title_hund2, TRUE);
 
-
-	DrawGraph(340, 510, kusa_1, TRUE);
-
-	DrawGraph(820, 360, kusa_2, TRUE);
 
 
 	bool isDistort = title_flag || title_flag2;
@@ -640,10 +731,13 @@ void GameManager::TitleLogo() {
 
 }
 
+// TITLE時のセレクトエフェクト描画
 
 
-void GameManager::GameInit() {
+void GameManager::SelectEffect() {
 
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)Select_Effect_Alpha);
 
 	title_effect.Draw(510, select_effect_Y, Select_Effect_Alpha);
 
